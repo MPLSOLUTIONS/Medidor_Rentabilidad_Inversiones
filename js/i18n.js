@@ -3,6 +3,7 @@ window.I18N = {
   es: {
     title: 'Medidor de Rentabilidad de Inversiones',
     subtitle: 'Compara depósitos a plazo y depósitos de rentabilidad variable: cuánto ganas al final del período.',
+    skip: 'Saltar al contenido', sections: 'Secciones', source: 'Código fuente en GitHub',
     language: 'Idioma', currency: 'Moneda de visualización',
     save: 'Guardar (JSON)', load: 'Cargar archivo', csv: 'Exportar resultados (CSV)', reset: 'Restaurar ejemplo',
     clear: 'Empezar vacío',
@@ -54,6 +55,7 @@ window.I18N = {
   en: {
     title: 'Investment Return Meter',
     subtitle: 'Compare term deposits and variable-return deposits: how much you earn at the end of the period.',
+    skip: 'Skip to content', sections: 'Sections', source: 'Source code on GitHub',
     language: 'Language', currency: 'Display currency',
     save: 'Save (JSON)', load: 'Load file', csv: 'Export results (CSV)', reset: 'Restore example',
     clear: 'Start empty',
