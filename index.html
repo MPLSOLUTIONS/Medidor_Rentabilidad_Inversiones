@@ -4,83 +4,142 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Medidor de Rentabilidad de Inversiones</title>
+  <meta name="description" content="Compara depósitos a plazo y depósitos de rentabilidad variable: ganancia, retorno anualizado, retorno real, benchmark y riesgo. Gratis, en CLP o USD, en español e inglés.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f141a" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://mplsolutions.github.io/Medidor_Rentabilidad_Inversiones/">
+
+  <!-- Vista previa al compartir el enlace -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Medidor de Rentabilidad de Inversiones">
+  <meta property="og:description" content="Compara inversiones y mira cuánto ganas al final del período: retorno simple, anualizado, real, benchmark y riesgo.">
+  <meta property="og:url" content="https://mplsolutions.github.io/Medidor_Rentabilidad_Inversiones/">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231f6feb'/%3E%3Cpath d='M12 46l14-14 10 8 16-20' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
+    integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/calc.js"></script>
+  <script defer src="js/app.js"></script>
 </head>
 <body>
+  <a class="skip" href="#contenido" data-i18n="skip">Saltar al contenido</a>
+
   <header class="top">
     <div>
-      <h1 data-i18n="title"></h1>
-      <p class="sub" data-i18n="subtitle"></p>
+      <h1 data-i18n="title">Medidor de Rentabilidad de Inversiones</h1>
+      <p class="sub" data-i18n="subtitle">Compara depósitos a plazo y depósitos de rentabilidad variable: cuánto ganas al final del período.</p>
     </div>
     <div class="toolbar">
-      <label><span data-i18n="language"></span>
-        <select id="lang"><option value="es">Español</option><option value="en">English</option></select>
+      <label><span data-i18n="language">Idioma</span>
+        <select id="lang" autocomplete="off">
+          <option value="es" lang="es">Español</option>
+          <option value="en" lang="en">English</option>
+        </select>
       </label>
-      <label><span data-i18n="currency"></span>
-        <select id="currency"><option value="CLP">CLP</option><option value="USD">USD</option></select>
+      <label><span data-i18n="currency">Moneda de visualización</span>
+        <select id="currency" autocomplete="off">
+          <option value="CLP">CLP</option>
+          <option value="USD">USD</option>
+        </select>
       </label>
     </div>
   </header>
 
-  <main>
-    <section class="panel">
-      <h2 data-i18n="general"></h2>
+  <nav class="sections" data-i18n-aria="sections" aria-label="Secciones">
+    <a href="#sec-general" data-i18n="general">Parámetros generales</a>
+    <a href="#sec-inversiones" data-i18n="investments">Inversiones</a>
+    <a href="#sec-resultados" data-i18n="results">Resultados</a>
+    <a href="#sec-graficos" data-i18n="charts">Gráficos</a>
+  </nav>
+
+  <noscript>
+    <p class="noscript">Esta aplicación necesita JavaScript para calcular y mostrar los resultados. Actívalo en tu navegador y recarga la página.<br>
+      <span lang="en">This app needs JavaScript to compute and show results. Enable it in your browser and reload the page.</span></p>
+  </noscript>
+
+  <main id="contenido" tabindex="-1">
+    <section class="panel" id="sec-general" aria-labelledby="h-general">
+      <h2 id="h-general" data-i18n="general">Parámetros generales</h2>
       <div class="grid" id="general">
-        <label><span data-i18n="horizon"></span><input type="number" id="horizon" min="1" max="360" step="1"></label>
-        <label><span data-i18n="inflation"></span><input type="number" id="inflation" step="any"></label>
-        <label><span data-i18n="benchName"></span><input type="text" id="benchName"></label>
-        <label><span data-i18n="benchRate"></span><input type="number" id="benchRate" step="any"></label>
-        <label><span data-i18n="fx"></span><input type="number" id="fx" min="1" step="any"></label>
+        <label><span data-i18n="horizon">Horizonte de comparación (meses)</span>
+          <input type="number" id="horizon" min="1" max="360" step="1" inputmode="numeric" autocomplete="off" aria-describedby="hint-general"></label>
+        <label><span data-i18n="inflation">Inflación anual esperada (%)</span>
+          <input type="number" id="inflation" step="any" inputmode="decimal" autocomplete="off" aria-describedby="hint-general"></label>
+        <label><span data-i18n="benchName">Nombre del benchmark</span>
+          <input type="text" id="benchName" maxlength="40" autocomplete="off"></label>
+        <label><span data-i18n="benchRate">Rentabilidad anual del benchmark (%)</span>
+          <input type="number" id="benchRate" step="any" inputmode="decimal" autocomplete="off"></label>
+        <label><span data-i18n="fx">Tipo de cambio (CLP por USD)</span>
+          <input type="number" id="fx" min="1" step="any" inputmode="decimal" autocomplete="off"></label>
       </div>
-      <p class="hint"><span data-i18n="hintHorizon"></span> <span data-i18n="hintInfl"></span></p>
+      <p class="hint" id="hint-general">
+        <span data-i18n="hintHorizon">Todas las inversiones se comparan a este plazo. Si una vence antes, su dinero queda sin rentar hasta el horizonte.</span>
+        <span data-i18n="hintInfl">Se usa para el retorno real. Debe corresponder a la moneda de visualización.</span>
+      </p>
       <div class="actions">
-        <button id="btnSave" data-i18n="save"></button>
-        <button id="btnLoad" data-i18n="load"></button>
+        <button type="button" id="btnSave" data-i18n="save">Guardar (JSON)</button>
+        <button type="button" id="btnLoad" data-i18n="load">Cargar archivo</button>
         <input type="file" id="fileInput" accept="application/json,.json" hidden>
-        <button id="btnCsv" data-i18n="csv"></button>
-        <button id="btnReset" class="ghost" data-i18n="reset"></button>
-        <button id="btnClear" class="ghost" data-i18n="clear"></button>
+        <button type="button" id="btnCsv" data-i18n="csv">Exportar resultados (CSV)</button>
+        <button type="button" id="btnReset" class="ghost" data-i18n="reset">Restaurar ejemplo</button>
+        <button type="button" id="btnClear" class="ghost" data-i18n="clear">Empezar vacío</button>
       </div>
-      <p id="status" class="status" role="status"></p>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
     </section>
 
-    <section class="panel">
+    <section class="panel" id="sec-inversiones" aria-labelledby="h-inversiones">
       <div class="row">
-        <h2 data-i18n="investments"></h2>
+        <h2 id="h-inversiones" data-i18n="investments">Inversiones</h2>
         <div class="actions">
-          <select id="tplSelect" aria-label="Template"></select>
-          <button id="btnAdd" class="primary" data-i18n="add"></button>
+          <select id="tplSelect" data-i18n-aria="template" aria-label="Plantilla" autocomplete="off"></select>
+          <button type="button" id="btnAdd" class="primary" data-i18n="add">Agregar inversión</button>
         </div>
       </div>
       <div id="invList"></div>
     </section>
 
-    <section class="panel">
-      <h2 data-i18n="results"></h2>
-      <div id="results" class="table-wrap"></div>
-      <p class="hint" data-i18n="tip"></p>
+    <section class="panel" id="sec-resultados" aria-labelledby="h-resultados">
+      <h2 id="h-resultados" data-i18n="results">Resultados</h2>
+      <div id="results" class="table-wrap" role="region" aria-labelledby="h-resultados" aria-live="polite" tabindex="0"></div>
+      <p class="hint" data-i18n="tip">Ganancia real = valor final menos lo que habría necesitado para solo mantener el poder de compra. El retorno anualizado es una TIR que considera la fecha de cada aporte.</p>
     </section>
 
-    <section class="panel">
-      <h2 data-i18n="charts"></h2>
-      <h3 data-i18n="ch_evolution"></h3>
-      <div class="chart"><canvas id="chEvolution"></canvas></div>
-      <h3 data-i18n="ch_compare"></h3>
-      <div class="chart"><canvas id="chCompare"></canvas></div>
-      <div class="row">
-        <h3 data-i18n="ch_dist"></h3>
-        <label class="inline"><span data-i18n="ch_pick"></span> <select id="distPick"></select></label>
-      </div>
-      <div class="chart"><canvas id="chDist"></canvas></div>
-      <p id="distNote" class="hint"></p>
+    <section class="panel" id="sec-graficos" aria-labelledby="h-graficos">
+      <h2 id="h-graficos" data-i18n="charts">Gráficos</h2>
+
+      <figure>
+        <figcaption><h3 id="h-evolucion" data-i18n="ch_evolution">Evolución en el tiempo (mediana y banda P10–P90)</h3></figcaption>
+        <div class="chart"><canvas id="chEvolution" role="img" aria-labelledby="h-evolucion"></canvas></div>
+      </figure>
+
+      <figure>
+        <figcaption><h3 id="h-comparativo" data-i18n="ch_compare">Comparativo de ganancias al final del período</h3></figcaption>
+        <div class="chart"><canvas id="chCompare" role="img" aria-labelledby="h-comparativo"></canvas></div>
+      </figure>
+
+      <figure>
+        <figcaption class="row">
+          <h3 id="h-distribucion" data-i18n="ch_dist">Distribución del resultado final</h3>
+          <label class="inline"><span data-i18n="ch_pick">Inversión</span> <select id="distPick" autocomplete="off"></select></label>
+        </figcaption>
+        <div class="chart"><canvas id="chDist" role="img" aria-labelledby="h-distribucion"></canvas></div>
+        <p id="distNote" class="hint" role="status"></p>
+      </figure>
     </section>
   </main>
 
-  <footer><p data-i18n="disclaimer"></p></footer>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-  <script src="js/i18n.js"></script>
-  <script src="js/calc.js"></script>
-  <script src="js/app.js"></script>
+  <footer>
+    <p data-i18n="disclaimer">Herramienta educativa. Los números de ejemplo son ficticios y los resultados son simulaciones, no garantías ni asesoría financiera.</p>
+    <p><a href="https://github.com/MPLSOLUTIONS/Medidor_Rentabilidad_Inversiones" rel="noopener" data-i18n="source">Código fuente en GitHub</a></p>
+  </footer>
 </body>
 </html>

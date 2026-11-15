@@ -76,6 +76,7 @@
     document.documentElement.lang = state.lang;
     document.title = t('title');
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i18n')); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function (el) { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
     var sel = $('tplSelect');
     sel.innerHTML = ['fixed', 'triangular', 'uniform', 'normal', 'scenarios', 'usd'].map(function (k) {
       return '<option value="' + k + '">' + esc(t('tpl_' + k)) + '</option>';
